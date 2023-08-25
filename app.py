@@ -23,8 +23,4 @@ def index():
     conn.close()
     return render_template('index.html', categorias=categorias, pratos=pratos)
 
-@app.route('/sobre')
-def sobre():
-    return "<p> Pagina sobre"
-
 app.run(debug=True)

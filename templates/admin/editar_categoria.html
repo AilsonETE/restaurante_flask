@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Editar Categoria</title>
+    <style>
+        /* Aplicar um tamanho fixo de 300x300 pixels à imagem */
+        img {
+            width: 300px;
+            height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Editar Categoria</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <label for="nome_categoria">Nome da Categoria:</label>
+        <input type="text" id="nome_categoria" name="nome_categoria" value="{{ categoria['nome'] }}" required>
+        <br>
+        <label for="descricao">Descrição:</label>
+        <input type="text" id="descricao" name="descricao" value="{{ categoria['descricao'] }}" required>
+        <br>
+        <label for="imagem_atual">Imagem Atual:</label>
+        <img src="data:image/jpeg;base64,{{ categoria['imagem'] }}" alt="Imagem Atual">
+        <br>
+        <label for="nova_imagem">Nova Imagem (opcional):</label>
+        <input type="file" id="nova_imagem" name="nova_imagem">
+        <br>
+        <button type="submit">Salvar Alterações</button>
+    </form>
+</body>
+</html>

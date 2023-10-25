@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <title>Cadastrar Categoria</title>
+</head>
+<body>
+    <h1>Cadastrar Categoria</h1>
+    <form method="POST" enctype="multipart/form-data">
+        <label for="nome_categoria">Nome da Categoria:</label>
+        <input type="text" id="nome_categoria" name="nome_categoria" required>
+        <br>
+        <label for="descricao">Descrição:</label>
+        <input type="text" id="descricao" name="descricao" required>
+        <br>
+        <label for="imagem">Imagem:</label>
+        <input type="file" id="imagem" name="imagem">
+        <br>
+        <button type="submit">Cadastrar</button>
+    </form>
+</body>
+</html>

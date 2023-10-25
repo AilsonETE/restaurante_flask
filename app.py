@@ -1,5 +1,6 @@
-from flask import Flask
-from flask import render_template
+from flask import Flask, render_template, request, redirect,url_for 
+import base64
+
 import sqlite3
 
 #cria o objeto app
@@ -25,18 +26,66 @@ def listar_categorias():
     conn.close()
     return render_template('admin/listar_categorias.html', categorias=categorias)
 
-# Rota para cadastrar categoria
-@app.route("/admin/cadastrar_categoria")
+
+@app.route("/admin/cadastrar_categorias", methods=['GET', 'POST'])
 def cadastrar_categoria():
-    # Implemente o código para cadastrar categoria
-    return render_template('admin/cadastrar_categoria.html')
+    if request.method == 'POST':
+        nome_categoria = request.form.get('nome_categoria')
+        descricao = request.form.get('descricao')
+        imagem = request.files.get('imagem')  # Obtém o arquivo de imagem enviado
+
+        if nome_categoria:
+            conn = get_db_connection()
+
+            if imagem:  # Se uma imagem foi enviada
+                imagem_base64 = base64.b64encode(imagem.read()).decode('utf-8')
+                conn.execute('INSERT INTO categorias (nome, descricao, imagem) VALUES (?, ?, ?)',
+                             (nome_categoria, descricao, imagem_base64))
+            else:
+                conn.execute('INSERT INTO categorias (nome, descricao) VALUES (?, ?)',
+                             (nome_categoria, descricao))
+
+            conn.commit()
+            conn.close()
+            return redirect(url_for('listar_categorias'))
+
+    return render_template('admin/cadastrar_categorias.html')
+
 
 # Rota para excluir categoria
-@app.route("/admin/excluir_categoria")
-def excluir_categoria():
-    # Implemente o código para excluir categoria
-    return render_template('admin/excluir_categoria.html')
+@app.route("/admin/excluir_categoria/<int:id>", methods=['GET', 'POST'])
+def excluir_categoria(id):
+    conn = get_db_connection()
+    categoria = conn.execute('SELECT * FROM categorias WHERE id = ?', (id,)).fetchone()
+    
+    if request.method == 'POST':
+        conn.execute('DELETE FROM categorias WHERE id = ?', (id,))
+        conn.commit()
+        conn.close()
+        return redirect(url_for('listar_categorias'))
+    
+    conn.close()
+    return render_template('admin/excluir_categoria.html', categoria=categoria)
 
+
+@app.route("/admin/editar_categoria/<int:id>", methods=['GET', 'POST'])
+def editar_categoria(id):
+    conn = get_db_connection()
+    categoria = conn.execute('SELECT * FROM categorias WHERE id = ?', (id,)).fetchone()
+    
+    if request.method == 'POST':
+        nome_categoria = request.form.get('nome_categoria')
+        descricao = request.form.get('descricao')
+        
+        if nome_categoria:
+            conn.execute('UPDATE categorias SET nome=?, descricao=? WHERE id=?', 
+                         (nome_categoria, descricao, id,))
+            conn.commit()
+            conn.close()
+            return redirect(url_for('listar_categorias'))
+    
+    conn.close()
+    return render_template('admin/editar_categoria.html', categoria=categoria)
 
 
 # cria a rota index

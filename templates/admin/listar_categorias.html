@@ -8,17 +8,32 @@
 </head>
 <body>
     <div class="dashboard">
-        <h1>LIstar categoria</h1>
-        {% for categorias in categorias %}
+        <h1>Listar categoria</h1>        
+    
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Descrição</th>
+                    <th>Editar</th>
+                    <th>Excluir</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for categoria in categorias %}
+                <tr>
+                    <td>{{ categoria['nome'] }}</td>
+                    <td>{{ categoria['descricao'] }}</td>
+                    <td><a href="{{ url_for('editar_categoria', id=categoria['id']) }}">Editar</a></td>
+                    <td><a href="{{ url_for('excluir_categoria', id=categoria['id']) }}">Excluir</a></td>
+                    
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
 
-        <ul>
-        <li>
-        {{categorias['nome']}}
-        {{categorias['descricao']}}
-        </li>
-        </ul>
-
-        {% endfor %}
+        <!-- Botão de retorno para outra página -->
+        <a href="{{ url_for('admin_panel') }}">Voltar</a>
     </div>
 </body>
 </html>
